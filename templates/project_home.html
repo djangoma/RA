@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Project</li>
+{% endblock %}
+
+{% block summary%}
+	<br>
+	<a href = "{% url 'search'%}">Search Project</a>
+
+	<p>External</p>
+	<p>Ongoing = {{projextongoingcount}}</p>
+	<p>Completed = {{projextcomplettedcount}}</p>
+	<p>Internal-Faculty</p>
+	<p>Ongoing = {{projintongoingfacultycount}}</p>
+	<p>Completed = {{projintcompletedfacultycount}}</p>
+	<p>Internal-Student</p>
+	<p>Ongoing = {{projintongoingstudentcount}}</p>
+	<p>Completed = {{projintcompletedstudentcount}}</p>
+	
+	
+{% endblock%}
+
+
+{% block content %}
+  <table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <!--<th>F.Author</th>
+        <th>Co-Author</th>
+        <th>Paper Title</th>
+        <th>Journal Name</th>-->
+		<th>Projects</th>
+		<th>Category</th>
+      </tr>
+    </thead>
+    {% for project in projects %}
+        <tr>
+          <td> <a href="{% url 'project_detail' project.pk %}">{{ project.projecttitle }}</a> </td>
+		  <td> {{project.projectcategory}}</a></td>
+        </tr>
+      {% endfor %}
+  </table>
+  <br><br>
+  <br>
+	  <br>
+	  <button type="submit" class="btn btn-default" ><a href="{% url 'project_new' %}">Add new</a></button>
+	  
+	  <p>Total porjects = {{projectcount}}</p>
+	  <p></p>
+{% endblock %}

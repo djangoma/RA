@@ -1,0 +1,79 @@
+# Create your models here.
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class Faculty(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	empid = models.CharField(primary_key=True,verbose_name="Employee ID",max_length = 20)
+	CSE ='Computer Science and Engineering'
+	IT ='Information Technology'
+	department_choice=((CSE,'Computer Science and Engineering'),(IT,'Information Technology'),)
+	department = models.CharField(verbose_name="Department",max_length=15,choices=department_choice, default=IT)
+		
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Faculty.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.faculty.save()
+	
+	from django.db import models
+	from django.contrib.auth.models import User
+	from testmodelresapp.models import Faculty
+	f1 = User.objects.get(username='uma')
+	
+	faculty = Faculty(user = f1, empid='F1', dept='IT')
+	faculty.save()
+	Faculty.objects.all()
+	
+	def signup(request):
+    
+	if request.method == 'POST':
+		signup_form = SignUpForm(request.POST)
+		faculty_form = FacultyForm(request.POST)
+		user_form = UserForm(request.POST)
+		if signup_form.is_valid() and user_form.is_valid and faculty_form.is_valid:
+			user_form.save()
+			signup_form.save()
+			faculty_form.save()
+			auth_login(request, user_form, signup_form, faculty_form)
+			return redirect('home')
+	else:
+		signup_form = SignUpForm()
+		user_form = UserForm()
+		faculty_form = FacultyForm()
+	return render(request, 'signup.html', {'signup_form':signup_form, 'user_form':user_form, 'faculty_form':faculty_form})
+	
+	
+	class Faculty(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	empid = models.CharField(primary_key=True,verbose_name="Employee ID",max_length = 20)
+	CSE ='Computer Science and Engineering'
+	IT ='Information Technology'
+	department_choice=((CSE,'Computer Science and Engineering'),(IT,'Information Technology'),)
+	dept = models.CharField(verbose_name="Department",max_length=50,choices=department_choice, default=IT)
+		
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Faculty.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.faculty.save()
+			
+			
+			
+#jpublishedon=django_filters.NumberFilter(name='jpublishedon', lookup_expr='year__gt')
+	#year__lte=django_filters.NumberFilter(name='jpublishedon', lookup_expr='year')
+	#has_jtr = django_filters.BooleanFilter(name='jtr', lookup_expr='isnull', exclude = True)
+	#has_jissn = django_filters.BooleanFilter(name='jissn', lookup_expr='isnull', exclude = True)
+	#jtr__gt=django_filters.NumberFilter(name='jtr', lookup_expr='jtr__gt')
+	#jstatus = django_filters.ModelMultipleChoiceFilter((choices='Accepted','Submitted'), widget=forms.CheckboxSelectMultiple)
+	#jstatus = django_filters.ModelChoiceFilter(queryset=jstatus)
+	
