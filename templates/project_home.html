@@ -6,20 +6,20 @@
 {% endblock %}
 
 {% block summary%}
+	
+	<em><p>External</p></em>
+	<li>Ongoing = {{projextongoingcount}}</li>
+	<li>Completed = {{projextcomplettedcount}}</li><br>
+	<em><p>Internal-Faculty</p></em>
+	<li>Ongoing = {{projintongoingfacultycount}}</li>
+	<li>Completed = {{projintcompletedfacultycount}}</li><br>
+	<em><p>Internal-Student<p></em>
+	<li>Ongoing = {{projintongoingstudentcount}}</li>
+	<li>Completed = {{projintcompletedstudentcount}}</li>
+	
 	<br>
-	<a href = "{% url 'search'%}">Search Project</a>
+	<a href = "{% url 'searchproject'%}">Search</a>
 
-	<p>External</p>
-	<p>Ongoing = {{projextongoingcount}}</p>
-	<p>Completed = {{projextcomplettedcount}}</p>
-	<p>Internal-Faculty</p>
-	<p>Ongoing = {{projintongoingfacultycount}}</p>
-	<p>Completed = {{projintcompletedfacultycount}}</p>
-	<p>Internal-Student</p>
-	<p>Ongoing = {{projintongoingstudentcount}}</p>
-	<p>Completed = {{projintcompletedstudentcount}}</p>
-	
-	
 {% endblock%}
 
 

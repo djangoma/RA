@@ -11,15 +11,23 @@
 
 {% block content %}
     <!-- just leaving it empty for now. we will add core here soon. -->
+	<li> Principal Investigator: 
+		{% for fa in fapilist %}
+		{{fa.facultyname}}, 
+		{% endfor %}
+	</li>
+	
+	<li> Co-Principal Investigator: 
+		{% for fa in facopilist %}
+		{{fa.facultyname}}, 
+		{% endfor %}
+	</li>
+	
 	<li> Project Title: {{project.projecttitle}}</li>
 	<li> Project Category: {{project.projectcategory}}</li>
 	<li> Project Status: {{project.projectstatus}}</li>
 	<li> Funding Agency: {{project.fundingagency}}</li>
-	<li> Faculty: 
-		{% for fa in falist %}
-		{{fa.facultyname}}, 
-		{% endfor %}
-	</li>
+	
 	
 	<li>Duration = {{project.duration}}</li>
 	<li>Sanctioned Date = {{project.sanctioneddate}}</li>

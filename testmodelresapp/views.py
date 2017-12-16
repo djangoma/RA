@@ -1,14 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import render,  redirect,get_object_or_404
-from .models import Department, Student, ResearchScholar, JournalArticle, ConferenceArticle, Project, Faculty
-from .forms import JournalNewForm, JournalUpdateForm, ConferenceNewForm, ConferenceUpdateForm, ProjectNewForm, ProjectUpdateForm
+from .models import Department, Student, ResearchScholar, JournalArticle, ConferenceArticle, Project, Faculty, BookSeries
+from .forms import JournalNewForm, JournalUpdateForm, ConferenceNewForm, ConferenceUpdateForm, ProjectNewForm, ProjectUpdateForm, BookSeriesNewForm, BookSeriesUpdateForm
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .filters import FacultyFilter, StudentFilter, ResearchScholarFilter, JournalArticleFilter
+from .filters import FacultyFilter, StudentFilter, ResearchScholarFilter, JournalArticleFilter, ConferenceArticleFilter, BookSeriesFilter, ProjectFilter
 
 def search(request):
 	'''faculty_list = Faculty.objects.all()
@@ -23,6 +23,25 @@ def search(request):
 	#return render(request, 'search/search_FacStuRsJ.html', {'faculty_filter':faculty_filter, 'student_filter':student_filter, 'rs_filter':rs_filter, 'j_filter':j_filter})
 	return render(request, 'search/search_FacStuRsJ.html', {'j_filter':j_filter})
 	
+def searchjournal(request):
+	j_list = JournalArticle.objects.all()
+	j_filter = JournalArticleFilter(request.GET, queryset=j_list)
+	return render(request, 'search/searchjournal.html', {'j_filter':j_filter})
+	
+def searchconference(request):
+	c_list = ConferenceArticle.objects.all()
+	c_filter = ConferenceArticleFilter(request.GET, queryset=c_list)
+	return render(request, 'search/searchconference.html', {'c_filter':c_filter})
+
+def searchproject(request):
+	p_list = Project.objects.all()
+	p_filter = ProjectFilter(request.GET, queryset=p_list)
+	return render(request, 'search/searchproject.html', {'p_filter':p_filter})
+	
+def searchbookseries(request):
+	b_list = BookSeries.objects.all()
+	b_filter = BookSeriesFilter(request.GET, queryset=b_list)
+	return render(request, 'search/searchbookseries.html', {'b_filter':b_filter})
 	
 @login_required	
 def home(request):
@@ -71,6 +90,12 @@ def project_home(request):
 	
 	return render(request, 'project_home.html', {'projects':projects, 'projextongoingcount':projextongoingcount, 'projintongoingfacultycount':projintongoingfacultycount, 'projintongoingstudentcount':projintongoingstudentcount, 'projextcomplettedcount':projextcomplettedcount, 'projintcompletedfacultycount':projintcompletedfacultycount, 'projintcompletedstudentcount':projintcompletedstudentcount})
 
+def bookseries_home(request):
+	bookseries = BookSeries.objects.all()
+	bookseriescount = BookSeries.objects.all().count()
+	
+	return render(request, 'bookseries_home.html', {'bookseries':bookseries, 'bookseriescount':bookseriescount})
+	
 @login_required	
 def journal_detail(request,pk):
 	'''try:
@@ -146,7 +171,7 @@ def conference_new(request):
 		if form.is_valid():
 			conference = form.save(commit=False)
 			conference.save()
-			return redirect('home')  # TODO: redirect to the created topic page
+			return redirect('conference_home')  # TODO: redirect to the created topic page
 	else:
 		form = ConferenceNewForm()
 	return render(request,'conference_new.html',{'conference':conference,'form': form})
@@ -155,11 +180,11 @@ def conference_new(request):
 def conference_update(request, pk):
 	conference=get_object_or_404(ConferenceArticle, pk=pk)
 	if request.method=='POST':
-		form = ConferenceUpdateForm(request.POST, instance=journal)
+		form = ConferenceUpdateForm(request.POST, instance=conference)
 		if form.is_valid():
 			conference = form.save(commit=False)
 			conference.save()
-			return redirect('home')
+			return redirect('conference_home')
 	else:
 		form=ConferenceUpdateForm(instance=conference)
 	return render(request, 'conference_update.html', {'conference':conference, 'form':form})
@@ -176,10 +201,12 @@ def project_detail(request,pk):
 	except Journal.DoesNotExist:
 		raise Http404'''
 	project=get_object_or_404(Project, pk=pk)
-	falist=project.faculty.all()
-	salist=project.student.all()
-	rslist=project.rs.all()
-	return render(request, 'project.html', {'project':project, 'falist':falist, 'salist':salist, 'rslist':rslist})
+	fapilist=project.facultypi.all()
+	facopilist=project.facultycopi.all()
+	salist = project.student.all()
+	rslist = project.rs.all()
+	
+	return render(request, 'project.html', {'project':project, 'fapilist':fapilist, 'facopilist':facopilist, 'salist':salist, 'rslist':rslist})
 	
 '''def new_journal(request, pk):
     journal = get_object_or_404(Journal, pk=pk)
@@ -194,7 +221,7 @@ def project_new(request):
 		form = ProjectNewForm(request.POST)
 		if form.is_valid():
 			project = form.save(commit=False)
-			projecct.save()
+			project.save()
 			return redirect('project_home')  # TODO: redirect to the created topic page
 	else:
 		form = ProjectNewForm()
@@ -218,3 +245,43 @@ def project_delete(request,pk):
 	project=get_object_or_404(Project, pk=pk)
 	return render(request, 'project_delete.html', {'project':project})
 
+def bookseries_detail(request,pk):
+	'''try:
+		journal=Journal.objects.get(pk=pk)
+	except Journal.DoesNotExist:
+		raise Http404'''
+	bookseries=get_object_or_404(BookSeries, pk=pk)
+	falist=bookseries.facultyauthor.all()
+	salist=bookseries.studentauthor.all()
+	rslist=bookseries.rsauthor.all()
+	return render(request, 'bookseries.html', {'bookseries':bookseries, 'falist':falist, 'salist':salist, 'rslist':rslist})
+
+def bookseries_new(request):
+	'''return HttpResponse("Hello World !!")'''
+	bookseries=BookSeries.objects.all()
+	user = User.objects.first()  # TODO: get the currently logged in user
+	if request.method == 'POST':
+		form = BookSeriesNewForm(request.POST)
+		if form.is_valid():
+			bookseries = form.save(commit=False)
+			bookseries.save()
+			return redirect('bookseries_home')  # TODO: redirect to the created topic page
+	else:
+		form = BookSeriesNewForm()
+	return render(request,'bookseries_new.html',{'bookseries':bookseries,'form': form})
+	
+def bookseries_update(request, pk):
+	bookseries=get_object_or_404(BookSeries, pk=pk)
+	if request.method=='POST':
+		form = BookSeriesUpdateForm(request.POST, instance=bookseries)
+		if form.is_valid():
+			bookseries = form.save(commit=False)
+			bookseries.save()
+			return redirect('bookseries_home')
+	else:
+		form=BookSeriesUpdateForm(instance=bookseries)
+	return render(request, 'bookseries_update.html', {'bookseries':bookseries, 'form':form})
+	
+def bookseries_delete(request,pk):
+	bookseries=get_object_or_404(BookSeries, pk=pk)
+	return render(request, 'bookseries_delete.html', {'bookseries':bookseries})

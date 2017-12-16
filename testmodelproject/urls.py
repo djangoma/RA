@@ -68,7 +68,19 @@ url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(temp
 	url(r'^project/(?P<pk>\d+)/delete/$',views.project_delete, name='project_delete'),
 	url(r'^project/new/$', views.project_new, name='project_new'),
 	
+	url(r'^bookseries/home/$', views.bookseries_home, name='bookseries_home'),
+	url(r'^bookseries/(?P<pk>\d+)/$',views.bookseries_detail, name='bookseries_detail'),
+	url(r'^bookseries/(?P<pk>\d+)/update/$',views.bookseries_update, name='bookseries_update'),
+	url(r'^bookseries/(?P<pk>\d+)/delete/$',views.bookseries_delete, name='bookseries_delete'),
+	url(r'^bookseries/new/$', views.bookseries_new, name='bookseries_new'),
+	
 	
 	url('^search/$', views.search, name='search'),
+	url('^searchjournal/$', views.searchjournal, name='searchjournal'),
+	url('^searchconference/$', views.searchconference, name='searchconference'),
+	url('^searchproject/$', views.searchproject, name='searchproject'),
+	url('^searchbookseries/$', views.searchbookseries, name='searchbookseries'),
+	
+	
 	url(r'admin/', admin.site.urls),
 ]

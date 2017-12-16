@@ -7,13 +7,15 @@
 
 
 {% block summary%}
+	
 	<br>
-	<a href = "{% url 'search'%}">Search Conference</a>
-	<p>Conference count = {{conferencecount}}</p>
 	<p>International = {{conferenceinternationalcount}}</p>
 	<p>National = {{conferencenationalcount}}</p>
 	
 	<p>2017 = {{year2017}}</p>
+	
+	<br>
+	<a href = "{% url 'searchconference'%}">Search</a>
 	
 {% endblock%}
 
@@ -26,7 +28,7 @@
         <th>Co-Author</th>
         <th>Paper Title</th>
         <th>Journal Name</th>-->
-		<th>Papers in reference format</th>
+		<th>List of Conference Proceedings ({{conferencecount}})</th>
       </tr>
     </thead>
     {% for conference in conferences %}

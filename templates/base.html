@@ -50,11 +50,12 @@
     <div class="container">
 		<ol class="breadcrumb my-4">
 		<li><a href="{% url 'home' %}">Journal</a></li>
-		<li>/ </li>
+		<li>... </li>
 		<li><a href="{% url 'conference_home' %}">Conference</a></li> 
-		<li>/ </li>
+		<li>... </li>
 		<li><a href="{% url 'project_home' %}">Projects</a></li>
-           
+        <li>...</li>
+		<li><a href="{% url 'bookseries_home' %}">Book Series</a></li>
 		</ol>
       <ol class="breadcrumb my-4">
 		{% block breadcrumb %}
@@ -65,7 +66,7 @@
 	  
 	  <div class="col-sm-2" style="background-color:bg-light;">
 	  
-	  Summary 
+	  
 	  {% block summary%}
 	  {% endblock%}
 	  

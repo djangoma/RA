@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {{ conference.ctitle }} - {{ block.super }}
+  {{ bookseries.booktitle }} - {{ block.super }}
 {% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'conference_home' %}">Conference</a></li>
-  <li class="breadcrumb-item active">{{ conference.ctitle }}</li>
+  <li class="breadcrumb-item"><a href="{% url 'bookseries_home' %}">Book Series</a></li>
+  <li class="breadcrumb-item active">{{ bookseries.booktitle }}</li>
 {% endblock %}
 
 {% block content %}
     <!-- just leaving it empty for now. we will add core here soon. -->
-	<li> Title: {{conference.ctitle}}</li>
-	<li> Duration: {{conference.cdatefrom}} to {{conference.cdateto}}</li>
-	
+	<li> {{bookseries.booktitle}}</li>
+	<li> {{bookseries.bookname}}</li>
+	<li> {{bookseries.bpublishedon}}</li>
 	<li> Faculty Authors : 
 		{% for fa in falist %}
 		{{fa.facultyname}}, 
@@ -32,14 +32,14 @@
 		{% endfor %}
 	</li>
 	
-	<li>Scopus SJR = {{conference.csjr}}</li>
-	<li>Scopus SNIP = {{conference.csnip}}</li>
-	<li>ISSN Number = {{conference.cisbn}}</li>
+	<li>Scopus SJR = {{bookseries.bsjr}}</li>
+	<li>Scopus SNIP = {{bookseries.bsnip}}</li>
+	<li>ISSN Number = {{bookseries.bisbn}}</li>
 	
 	<br>
 	  <br>
-	  <button type="submit" class="btn btn-default" ><a href="{% url 'conference_update' conference.pk %}">Update</a></button>
-	  <button type="submit" class="btn btn-default" ><a href="{% url 'conference_delete' conference.pk %}">Delete</a></button>
+	  <button type="submit" class="btn btn-default" ><a href="{% url 'bookseries_update' bookseries.pk %}">Update</a></button>
+	  <button type="submit" class="btn btn-default" ><a href="{% url 'bookseries_delete' bookseries.pk %}">Delete</a></button>
 	  <br>
 	  <br>
 				

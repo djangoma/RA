@@ -37,12 +37,13 @@
 
 {% block summary%}
 	<br>
-	<a href = "{% url 'search'%}">Search Journal</a>
-	<p>Journal count = {{journalcount}}</p>
 	<p>Published = {{publishedcount}}</p>
 	<p>Accepted = {{acceptedcount}}</p>
 	<p>Submitted = {{submittedcount}}</p>
 	<p>2017 = {{year2017}}</p>
+	<br>
+	<br>
+	<a href = "{% url 'searchjournal'%}">Search</a>
 	
 {% endblock%}
 
@@ -55,7 +56,7 @@
         <th>Co-Author</th>
         <th>Paper Title</th>
         <th>Journal Name</th>-->
-		<th>Journal Articles  <a href="{% url 'journal_new' %}" ><span class="glyphicon glyphicon-plus"></span></a></th>
+		<th>List of Journal Publications ({{journalcount}})  <a href="{% url 'journal_new' %}" ><span class="glyphicon glyphicon-plus"></span></a></th>
 		
       </tr>
     </thead>

@@ -97,3 +97,15 @@
 <li>{{rs.rsname}}-{{rs.rsregno}}-{{rs.rssupervisor}}</li>
 {% endfor %}
 </ul>
+
+
+<!--{% block stylesheet %}
+  <link rel="stylesheet" href="{% url 'static/css/simplemde.min.css' %}">
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% url 'static/js/simplemde.min.js' %}"></script>
+  <script>
+    var simplemde = new SimpleMDE();
+  </script>
+{% endblock %}-->

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Update Conference {% endblock %}
+{% block title %}Update Book Series {% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'conference_home' %}">Conference</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'bookseries_home' %}">Book Series</a></li>
   <!--<li class="breadcrumb-item"><a href=""></a></li>-->
-  <li class="breadcrumb-item active">Update Conference</li>
+  <li class="breadcrumb-item active">Update Book Series</li>
 {% endblock %}
 
 {% block content %}
-<p>Update Conference </p>
-<p>{{conference.ctitle}}</p>
+<p>Update Book Series </p>
+<p>{{bookseries.booktitle}}</p>
 	<form method="post">
     {% csrf_token %}
 	{% include 'includes/form.html' %}

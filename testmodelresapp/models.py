@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.html import mark_safe
 from markdown import markdown
+import datetime
 
 class Department(models.Model):
 	deptname = models.CharField(verbose_name='Department Name', max_length=50)
@@ -30,7 +31,7 @@ class Student(models.Model):
 	UG ='UG Student'
 	PG ='PG Student'
 	studentcategory_choice=((UG,'UG Student'),(PG,'PG Student'),)
-	studentcategory=models.CharField(verbose_name="Student Category",max_length=5,choices=studentcategory_choice, default=UG)
+	studentcategory=models.CharField(verbose_name="Student Category",max_length=20,choices=studentcategory_choice, default=UG)
 	def __str__(self):
 		return self.sname
 	
@@ -56,19 +57,19 @@ class JournalArticle(models.Model):
 	UnderReview = 'Under Review' 
 	jstatus_choice = ((Accepted,'Accepted'),(Submitted,'Submitted'),(Published, 'Published'), (UnderReview,'Under Review'))
 	jstatus = models.CharField(verbose_name="Publication Status",max_length=15,choices=jstatus_choice, default=Published)
-	jpublishedon = models.DateTimeField(verbose_name="Publication Date", blank = True)
+	jpublishedon = models.DateField(verbose_name="Publication Date", blank = True)
 	jvolno = models.IntegerField(verbose_name="Volume",blank=True, null = True)
 	jissueno = models.IntegerField(verbose_name="Issue No",blank=True, null = True)
 	jpageno = models.CharField(verbose_name="Page No",max_length=20, blank=True, null = True)
-	jtr = models.FloatField(verbose_name="SCI-IF",blank=True)
-	jsjr = models.FloatField(verbose_name="SJR",blank=True)
-	jsnip = models.FloatField(verbose_name="SNIP",blank=True)
-	jissn = models.CharField(verbose_name="ISSN NO",max_length=20,blank=True)
+	jtr = models.FloatField(verbose_name="SCI-IF", null=True, blank=True)
+	jsjr = models.FloatField(verbose_name="SJR", null=True, blank=True)
+	jsnip = models.FloatField(verbose_name="SNIP", null=True, blank=True)
+	jissn = models.IntegerField(verbose_name="ISSN NO",null=True, blank=True)
 	YES='Yes'
 	NO='No'
 	pubfromconf_choice=((YES,'Yes'),(NO,'No'),)
 	pubfromconf=models.CharField(verbose_name="Through conf.",max_length=5,choices=pubfromconf_choice, default=NO)
-	created_at = models.DateTimeField(verbose_name="Created At", auto_now_add=True)
+	created_at = models.DateField(verbose_name="Created At", auto_now_add=True)
 	updated_at = models.DateTimeField(verbose_name="Updated At", null = True)
 	created_by = models.ForeignKey(User, related_name = 'journals', on_delete=models.CASCADE,)
 	updated_by = models.ForeignKey(User, null = True, related_name = '+', on_delete=models.CASCADE,)
@@ -98,17 +99,17 @@ class ConferenceArticle(models.Model):
 	cdateto=models.DateField(verbose_name="Conference Date To: ")
 	venue=models.CharField(verbose_name="Venue",max_length=100)
 	country = models.CharField(verbose_name="Country", max_length=50)
-	csjr = models.FloatField(verbose_name="SJR",blank=True)
-	csnip = models.FloatField(verbose_name="SNIP",blank=True)
-	cisbn = models.CharField(verbose_name="ISBN NO",max_length=20,blank=True)
+	csjr = models.FloatField(verbose_name="SJR", null=True, blank=True)
+	csnip = models.FloatField(verbose_name="SNIP", null=True, blank=True)
+	cisbn = models.FloatField(verbose_name="ISBN", null=True, blank=True)
 	
 	NO='No'
 	JOURNAL = 'Journal'
 	BOOKSERIES = 'Book Series'
 	pubtojournalorbook_choice=((NO,'No'),(JOURNAL,'Journal'),(BOOKSERIES,'Book Series'))
 	pubtojournalorbook=models.CharField(verbose_name="To be Published as Journal/ Book",max_length=50,choices=pubtojournalorbook_choice, default=NO)
-	created_at = models.DateTimeField(verbose_name="Created At", auto_now_add=True)
-	updated_at = models.DateField(verbose_name="Updated At", null = True)
+	created_at = models.DateField(verbose_name="Created At", auto_now_add=True)
+	updated_at = models.DateTimeField(verbose_name="Updated At", null = True)
 	created_by = models.ForeignKey(User, related_name = 'conferences', on_delete=models.CASCADE,)
 	updated_by = models.ForeignKey(User, null = True, related_name = '+', on_delete=models.CASCADE,)
 		
@@ -120,18 +121,19 @@ class ConferenceArticle(models.Model):
 
 class BookSeries(models.Model):
 	refformat=models.TextField(verbose_name="Citation Format",max_length=500,blank=False)
-	facultyauthor = models.ManyToManyField('Faculty',verbose_name="Faculty Author",max_length=100)
-	studentauthor = models.ManyToManyField('Student',verbose_name="Student Author",max_length=100,blank=True)
-	rsauthor = models.ManyToManyField('ResearchScholar',verbose_name="Research Scholar Author",max_length=100,blank=True)
+	facultyauthor = models.ManyToManyField('Faculty',verbose_name="Faculty Author")
+	studentauthor = models.ManyToManyField('Student',verbose_name="Student Author",blank=True)
+	rsauthor = models.ManyToManyField('ResearchScholar',verbose_name="Research Scholar Author",blank=True)
 	booktitle = models.CharField(verbose_name="Paper Title",max_length=200,blank=False,default='')
 	bookname = models.CharField(verbose_name="Conference Name",max_length=200,blank=False,default='')
+	bpublishedon = models.DateField(verbose_name="Publication on:",default=datetime.date.today )
 	YES='Yes'
 	NO='No'
 	pubfromconf_choice=((YES,'Yes'),(NO,'No'),)
 	pubfromconf=models.CharField(verbose_name="Through conf.",max_length=50,choices=pubfromconf_choice, default=NO)
-	bsjr = models.FloatField(verbose_name="SJR",blank=True)
-	bsnip = models.FloatField(verbose_name="SJR",blank=True)
-	bisbn = models.CharField(verbose_name="ISBN NO",max_length=20,blank=True)
+	bsjr = models.FloatField(verbose_name="SJR", null=True, blank=True)
+	bsnip = models.FloatField(verbose_name="SNIP", null=True, blank=True)
+	bisbn = models.FloatField(verbose_name="ISBN", null=True, blank=True)
 	created_at = models.DateTimeField(verbose_name="Created At", auto_now_add=True)
 	updated_at = models.DateField(verbose_name="Updated At", null = True)
 	created_by = models.ForeignKey(User, related_name = 'books', on_delete=models.CASCADE,)
@@ -141,10 +143,10 @@ class BookSeries(models.Model):
 		return self.refformat
 		
 class Project(models.Model):
-	facultypi = models.ManyToManyField('Faculty',verbose_name="Faculty", related_name = 'projectpis', blank=True)
-	facultycopi = models.ManyToManyField('Faculty', verbose_name="Principal Investigator", related_name = 'projectcopis', blank = True)
-	student = models.ManyToManyField('Student',verbose_name="Student",max_length=100,blank=True)
-	rs = models.ManyToManyField('ResearchScholar',verbose_name="Research Scholar",max_length=100,blank=True)
+	facultypi = models.ManyToManyField('Faculty',verbose_name="Principal Investigator", related_name = 'projectpis', blank=True)
+	facultycopi = models.ManyToManyField('Faculty', verbose_name="Co-Principal Investigator", related_name = 'projectcopis', blank = True)
+	student = models.ManyToManyField('Student',verbose_name="Student",blank=True)
+	rs = models.ManyToManyField('ResearchScholar',verbose_name="Research Scholar",blank=True)
 	projecttitle = models.CharField(verbose_name="Project Title",max_length=200)
 	fundingagency=models.CharField(verbose_name="Funding Agency",max_length=200)
 	EXTERNAL='External'
@@ -156,18 +158,19 @@ class Project(models.Model):
 	SUBMITTED='Submitted'
 	ONGOING='Ongoing'
 	COMPLETED='Completed'
-	PRESENTEDRESULTSAWAITING = 'Presented-Results Awaiting'
-	projectstatus_choice=((SUBMITTED,'Submitted'),(ONGOING,'Ongoing'),(COMPLETED,'Completed'),(PRESENTEDRESULTSAWAITING,'Presented-Results Awaiting'))
-	projectstatus=models.CharField(verbose_name="Project Category",max_length=50,choices=projectstatus_choice, default=ONGOING)
+	RESULTSPENDING = 'Results Pending'
+	REJECTED = 'Rejected'
+	projectstatus_choice=((SUBMITTED,'Submitted'),(ONGOING,'Ongoing'),(COMPLETED,'Completed'),(RESULTSPENDING,'Results Pending'),(REJECTED,'Rejected'),)
+	projectstatus=models.CharField(verbose_name="Project Status",max_length=50,choices=projectstatus_choice, default=ONGOING)
 	duration=models.CharField(verbose_name="Duration",max_length=50)
-	sanctioneddate=models.DateField(verbose_name="Sanctioned Date",max_length=50)
+	sanctioneddate=models.DateField(verbose_name="Sanctioned Date")
 	sanctionedamount=models.FloatField(verbose_name="Sanctioned Amount",blank = True)
-	fundreleasedon=models.DateField(verbose_name="Fund Released On",blank=True)
+	fundreleasedon=models.CharField(verbose_name="Fund Released On",max_length=20, blank=True)
 	amountreceived=models.CharField(verbose_name="Amount Received",max_length=200, blank=True)
-	completiondate=models.DateField(verbose_name="Completion Date", blank = True)
+	completiondate=models.DateField(verbose_name="Completion Date", blank = True, null = True)
 	outcome=models.TextField(verbose_name="Outcome",max_length=500, blank=True)
-	created_at = models.DateTimeField(verbose_name="Created At", auto_now_add=True)
-	updated_at = models.DateField(verbose_name="Updated At", null = True)
+	created_at = models.DateField(verbose_name="Created At", auto_now_add=True)
+	updated_at = models.DateTimeField(verbose_name="Updated At", null = True)
 	created_by = models.ForeignKey(User, related_name = 'projects', on_delete=models.CASCADE,)
 	updated_by = models.ForeignKey(User, null = True, related_name = '+', on_delete=models.CASCADE,)
 	
