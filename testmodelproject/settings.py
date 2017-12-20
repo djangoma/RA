@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 	'testmodelresapp',
 	'widget_tweaks',
 	'accounts',
+	'import_export',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
+IMPORT_EXPORT_USE_TRANSACTIONS = True

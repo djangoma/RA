@@ -35,13 +35,54 @@
 		<th>Category</th>
       </tr>
     </thead>
-    {% for project in projects %}
+    {% for project in p %}
         <tr>
           <td> <a href="{% url 'project_detail' project.pk %}">{{ project.projecttitle }}</a> </td>
 		  <td> {{project.projectcategory}}</a></td>
         </tr>
       {% endfor %}
   </table>
+  
+  {% if p.has_other_pages %}
+  <nav aria-label="Topics pagination" class="mb-4">
+    <ul class="pagination">
+      {% if p.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ p.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
+
+      {% for page_num in p.paginator.page_range %}
+        {% if p.number == page_num %}
+          <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if p.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ p.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
   <br><br>
   <br>
 	  <br>

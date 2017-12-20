@@ -72,15 +72,35 @@ def home(request):
 @login_required	
 def conference_home(request):
 	conferences = ConferenceArticle.objects.all()
+	page = request.GET.get('page', 1)
+	paginator = Paginator(conferences, 5)
+	try:
+		c = paginator.page(page)
+	except PageNotAnInteger:
+		c = paginator.page(1)
+	except EmptyPage:
+		c = paginator.page(paginator.num_pages)
+	
 	conferencecount = ConferenceArticle.objects.all().count()
 	conferenceinternationalcount = ConferenceArticle.objects.filter(conferencecategory='International').count()
 	conferencenationalcount = ConferenceArticle.objects.filter(conferencecategory='National').count()
 	year2017 = ConferenceArticle.objects.all().filter(cdatefrom__year=2017).count()
-	return render(request, 'conference_home.html',{'conferences':conferences, 'conferencecount':conferencecount,'conferenceinternationalcount':conferenceinternationalcount, 'conferencenationalcount':conferencenationalcount, 'year2017':year2017 })
+	return render(request, 'conference_home.html',{'conferences':conferences,'c':c, 'conferencecount':conferencecount,'conferenceinternationalcount':conferenceinternationalcount, 'conferencenationalcount':conferencenationalcount, 'year2017':year2017 })
 
 @login_required	
 def project_home(request):
 	projects = Project.objects.all()
+	
+	page = request.GET.get('page', 1)
+	paginator = Paginator(projects, 5)
+	
+	try:
+		p = paginator.page(page)
+	except PageNotAnInteger:
+		p = paginator.page(1)
+	except EmptyPage:
+		p = paginator.page(paginator.num_pages)
+		
 	projextongoingcount = Project.objects.filter(projectcategory='External').filter(projectstatus='Ongoing').count()
 	projintongoingfacultycount = Project.objects.filter(projectcategory='Internal Faculty').filter(projectstatus='Ongoing').count()
 	projintongoingstudentcount = Project.objects.filter(projectcategory='Internal Student').filter(projectstatus='Ongoing').count()
@@ -88,13 +108,22 @@ def project_home(request):
 	projintcompletedfacultycount = Project.objects.filter(projectcategory='Internal Faculty').filter(projectstatus='Completed').count()
 	projintcompletedstudentcount = Project.objects.filter(projectcategory='Internal Student').filter(projectstatus='Completed').count()
 	
-	return render(request, 'project_home.html', {'projects':projects, 'projextongoingcount':projextongoingcount, 'projintongoingfacultycount':projintongoingfacultycount, 'projintongoingstudentcount':projintongoingstudentcount, 'projextcomplettedcount':projextcomplettedcount, 'projintcompletedfacultycount':projintcompletedfacultycount, 'projintcompletedstudentcount':projintcompletedstudentcount})
+	return render(request, 'project_home.html', {'projects':projects, 'p':p, 'projextongoingcount':projextongoingcount, 'projintongoingfacultycount':projintongoingfacultycount, 'projintongoingstudentcount':projintongoingstudentcount, 'projextcomplettedcount':projextcomplettedcount, 'projintcompletedfacultycount':projintcompletedfacultycount, 'projintcompletedstudentcount':projintcompletedstudentcount})
 
 def bookseries_home(request):
 	bookseries = BookSeries.objects.all()
+	page = request.GET.get('page', 1)
+	paginator = Paginator(bookseries, 5)
+	try:
+		bs = paginator.page(page)
+	except PageNotAnInteger:
+		bs = paginator.page(1)
+	except EmptyPage:
+		bs = paginator.page(paginator.num_pages)
+		
 	bookseriescount = BookSeries.objects.all().count()
 	
-	return render(request, 'bookseries_home.html', {'bookseries':bookseries, 'bookseriescount':bookseriescount})
+	return render(request, 'bookseries_home.html', {'bookseries':bookseries, 'bs':bs,'bookseriescount':bookseriescount})
 	
 @login_required	
 def journal_detail(request,pk):

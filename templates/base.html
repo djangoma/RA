@@ -21,6 +21,29 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+	
+	
+	<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home'%}">Journal</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="{% url 'conference_home' %}">Conference</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="{% url 'project_home' %}">Project</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="{% url 'bookseries_home' %}">Book Series</a>
+          </li>
+		  
+		  </ul>
+		  </div>
+		  
     <div class="collapse navbar-collapse" id="mainMenu">
       {% if user.is_authenticated %}
         <ul class="navbar-nav ml-auto">
@@ -48,7 +71,7 @@
 
 	
     <div class="container">
-		<ol class="breadcrumb my-4">
+		<!--<ol class="breadcrumb my-4">
 		<li><a href="{% url 'home' %}">Journal</a></li>
 		<li>... </li>
 		<li><a href="{% url 'conference_home' %}">Conference</a></li> 
@@ -56,7 +79,7 @@
 		<li><a href="{% url 'project_home' %}">Projects</a></li>
         <li>...</li>
 		<li><a href="{% url 'bookseries_home' %}">Book Series</a></li>
-		</ol>
+		</ol>-->
       <ol class="breadcrumb my-4">
 		{% block breadcrumb %}
         {% endblock %}
