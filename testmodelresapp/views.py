@@ -9,6 +9,27 @@ from django.utils.decorators import method_decorator
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .filters import FacultyFilter, StudentFilter, ResearchScholarFilter, JournalArticleFilter, ConferenceArticleFilter, BookSeriesFilter, ProjectFilter
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+from .models import Document
+from .forms import DocumentForm
+
+
+def uploadhome(request):
+    documents = Document.objects.all()
+    return render(request, 'uploadhome.html', { 'documents': documents })
+
+def fileupload(request):
+	if request.method =='POST':
+		form = DocumentForm(request.POST, request.FILES)
+		if form.is_valid():
+			form.save()
+			return redirect('uploadhome')
+	else:
+		form = DocumentForm()
+	return render(request, 'fileupload.html', {'form':form})
+	
 
 def search(request):
 	'''faculty_list = Faculty.objects.all()

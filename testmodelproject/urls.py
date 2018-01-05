@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from testmodelresapp import views
 from accounts import views as accounts_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 	url(r'^$', views.home, name='home'),
@@ -80,7 +82,10 @@ url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(temp
 	url('^searchconference/$', views.searchconference, name='searchconference'),
 	url('^searchproject/$', views.searchproject, name='searchproject'),
 	url('^searchbookseries/$', views.searchbookseries, name='searchbookseries'),
-	
+	url(r'^uploadhome/$', views.uploadhome, name='uploadhome'),
+	url(r'^fileupload/$', views.fileupload, name='fileupload'),
 	
 	url(r'admin/', admin.site.urls),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

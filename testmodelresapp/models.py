@@ -7,12 +7,21 @@ from django.dispatch import receiver
 from django.utils.html import mark_safe
 from markdown import markdown
 import datetime
+from django.db import models
 
+class Document(models.Model):
+	description = models.CharField(max_length = 255, blank = True)
+	document = models.FileField(upload_to = 'documents/')
+	uploaded_at = models.DateTimeField(auto_now_add = True)
+	def __str__(self):
+		return self.description
+		
 class Department(models.Model):
 	deptname = models.CharField(verbose_name='Department Name', max_length=50)
 	
 	def __str__(self):
 		return self.deptname
+	
 		
 class Faculty(models.Model):
 	empid = models.CharField(primary_key=True, verbose_name="Employee ID",max_length=20)
@@ -21,6 +30,11 @@ class Faculty(models.Model):
 		
 	def __str__(self):
 		return self.facultyname
+		
+	#def display_deptname(self):
+	#	return ', '.join([dname.deptname for dname in self.deptname.all() ])
+	
+	#display_deptname.short_description = 'Department Name'
 		
 class Student(models.Model):
 	sregno = models.CharField(primary_key=True,verbose_name="Registration Number", max_length=20)
@@ -34,6 +48,11 @@ class Student(models.Model):
 	studentcategory=models.CharField(verbose_name="Student Category",max_length=20,choices=studentcategory_choice, default=UG)
 	def __str__(self):
 		return self.sname
+		
+	#def display_deptname(self):
+	#	return ', '.join([dname.deptname for dname in self.deptname.all() ])
+	
+	#display_deptname.short_description = 'Department Name'
 	
 class ResearchScholar(models.Model):
 	rsname = models.CharField(verbose_name="Student Name", max_length=100)
@@ -69,6 +88,11 @@ class JournalArticle(models.Model):
 	NO='No'
 	pubfromconf_choice=((YES,'Yes'),(NO,'No'),)
 	pubfromconf=models.CharField(verbose_name="Through conf.",max_length=5,choices=pubfromconf_choice, default=NO)
+	YES='Yes'
+	NO='No'
+	paynopay_choice=((YES,'Yes'),(NO,'No'),)
+	paynopay=models.CharField(verbose_name="Paid Journal",max_length=5,choices=paynopay_choice, default=NO)
+	country = models.CharField(verbose_name="Country, published from", max_length=50, null = True)
 	created_at = models.DateField(verbose_name="Created At", auto_now_add=True)
 	updated_at = models.DateTimeField(verbose_name="Updated At", null = True)
 	created_by = models.ForeignKey(User, related_name = 'journals', on_delete=models.CASCADE,)
@@ -82,6 +106,21 @@ class JournalArticle(models.Model):
 	
 	def get_refformat_as_markdown(self):
 		return mark_safe(markdown(self.refformat, safe_mode = 'escape'))
+		
+	def display_fauthor(self):
+		return ', '.join([facultyauthor.facultyname for facultyauthor in self.facultyauthor.all()[:3]])
+	
+	display_fauthor.short_description = 'Faculty Name'
+	
+	def display_sauthor(self):
+		return ', '.join([studentauthor.sname for studentauthor in self.studentauthor.all()[:3]])
+	
+	display_sauthor.short_description = 'Student Name'
+	
+	def display_rsauthor(self):
+		return ', '.join([rsauthor.rsname for rsauthor in self.rsauthor.all()[:3]])
+	
+	display_rsauthor.short_description = 'RS Name'
 		
 class ConferenceArticle(models.Model):
 	refformat=models.TextField(verbose_name="Citation Format",max_length=500,blank=False)
@@ -118,6 +157,21 @@ class ConferenceArticle(models.Model):
 	
 	def get_absolute_url(self):
 		return reverse('researchapp:conference_detail',kwargs={'pk': self.pk} )
+		
+	def display_fauthor(self):
+		return ', '.join([facultyauthor.facultyname for facultyauthor in self.facultyauthor.all()[:3]])
+	
+	display_fauthor.short_description = 'Faculty Name'
+	
+	def display_sauthor(self):
+		return ', '.join([studentauthor.sname for studentauthor in self.studentauthor.all()[:3]])
+	
+	display_sauthor.short_description = 'Student Name'
+	
+	def display_rsauthor(self):
+		return ', '.join([rsauthor.rsname for rsauthor in self.rsauthor.all()[:3]])
+	
+	display_rsauthor.short_description = 'RS Name'
 
 class BookSeries(models.Model):
 	refformat=models.TextField(verbose_name="Citation Format",max_length=500,blank=False)
@@ -125,7 +179,7 @@ class BookSeries(models.Model):
 	studentauthor = models.ManyToManyField('Student',verbose_name="Student Author",blank=True)
 	rsauthor = models.ManyToManyField('ResearchScholar',verbose_name="Research Scholar Author",blank=True)
 	booktitle = models.CharField(verbose_name="Paper Title",max_length=200,blank=False,default='')
-	bookname = models.CharField(verbose_name="Conference Name",max_length=200,blank=False,default='')
+	bookname = models.CharField(verbose_name="Book Title",max_length=200,blank=False,default='')
 	bpublishedon = models.DateField(verbose_name="Publication on:",default=datetime.date.today )
 	YES='Yes'
 	NO='No'
@@ -141,6 +195,21 @@ class BookSeries(models.Model):
 		
 	def __str__(self):
 		return self.refformat
+		
+	def display_fauthor(self):
+		return ', '.join([facultyauthor.facultyname for facultyauthor in self.facultyauthor.all()[:3]])
+	
+	display_fauthor.short_description = 'Faculty Name'
+	
+	def display_sauthor(self):
+		return ', '.join([studentauthor.sname for studentauthor in self.studentauthor.all()[:3]])
+	
+	display_sauthor.short_description = 'Student Name'
+	
+	def display_rsauthor(self):
+		return ', '.join([rsauthor.rsname for rsauthor in self.rsauthor.all()[:3]])
+	
+	display_rsauthor.short_description = 'RS Name'
 		
 class Project(models.Model):
 	facultypi = models.ManyToManyField('Faculty',verbose_name="Principal Investigator", related_name = 'projectpis', blank=True)
@@ -179,3 +248,23 @@ class Project(models.Model):
 		
 	def get_absolute_url(self):
 		return reverse('researchapp:project_detail',kwargs={'pk': self.pk} )
+		
+	def display_fpiauthor(self):
+		return ', '.join([facultypi.facultyname for facultypi in self.facultypi.all()[:3]])
+	
+	display_fpiauthor.short_description = 'PI Name'
+	
+	def display_fcopiauthor(self):
+		return ', '.join([facultycopi.facultyname for facultycopi in self.facultycopi.all()[:3]])
+	
+	display_fcopiauthor.short_description = 'PI Name'
+	
+	def display_sauthor(self):
+		return ', '.join([studentauthor.sname for studentauthor in self.student.all()[:3]])
+	
+	display_sauthor.short_description = 'Student Name'
+	
+	def display_rsauthor(self):
+		return ', '.join([rsauthor.rsname for rsauthor in self.rs.all()[:3]])
+	
+	display_rsauthor.short_description = 'RS Name'
