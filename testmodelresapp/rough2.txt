@@ -1,0 +1,14 @@
+facultyauthor = fields.Field(column_name='facultyauthor', attribute='facultyauthor.set()',widget=ManyToManyWidget(Faculty, 'facultyname',))
+	studentauthor = fields.Field(column_name='studentauthor', attribute='studentauthor.set()',widget=ManyToManyWidget(Student,'sname',))
+	rsauthor = fields.Field(column_name='rsauthor', attribute='rsauthor.set()',widget=ManyToManyWidget(ResearchScholar, 'rsname',))
+	
+	
+	facultyauthor = fields.Field(column_name='facultyauthor', attribute='facultyauthor.set()',widget=ManyToManyWidget(Faculty,))
+	studentauthor = fields.Field(column_name='studentauthor', attribute='studentauthor.set()',widget=ManyToManyWidget(Student,))
+	rsauthor = fields.Field(column_name='rsauthor', attribute='rsauthor.set()',widget=ManyToManyWidget(ResearchScholar,))
+	
+	
+	fields = ('empid','facultyname',)
+        queryset = Faculty.objects.all()
+        resource_name = 'facultynames'
+        #export_order = ('empid','facultyname', 'deptname')

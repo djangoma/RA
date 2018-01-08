@@ -69,7 +69,7 @@ def home(request):
 	journals=JournalArticle.objects.all()
 	
 	page = request.GET.get('page', 1)
-	paginator = Paginator(journals, 5)
+	paginator = Paginator(journals, 3)
 	
 	try:
 		j = paginator.page(page)
@@ -94,7 +94,7 @@ def home(request):
 def conference_home(request):
 	conferences = ConferenceArticle.objects.all()
 	page = request.GET.get('page', 1)
-	paginator = Paginator(conferences, 5)
+	paginator = Paginator(conferences, 3)
 	try:
 		c = paginator.page(page)
 	except PageNotAnInteger:
